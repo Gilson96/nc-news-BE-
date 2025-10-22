@@ -31,3 +31,18 @@ describe("GET /api/topics", () => {
       });
   });
 });
+
+describe("GET /api/articles/:article_id", () => {
+  it("200 response with the article object of the given id", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        console.log(body)
+        expect(body).toHaveProperty("article");
+        expect(typeof article).toBe("object");
+        expect(article).toHaveProperty("article_id", 1);
+      });
+  });
+});
