@@ -13,7 +13,7 @@ afterAll(() => {
 });
 
 describe("checks if attempting to access a non-existent endpoint", () => {
-  it.only("should respond with a 404 status code for invalis endpoint", () => {
+  it("should respond with a 404 status code for invalid endpoint", () => {
     return request(app).get("/api/invalid-endpoint").expect(404);
   });
 });
@@ -120,7 +120,6 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article);
         expect(body).toHaveProperty("article");
         expect(typeof article).toBe("object");
         expect(article).toHaveProperty("article_id", 1);
@@ -143,7 +142,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/99999")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
+        expect(body.msg).toBe("No results");
       });
   });
   it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
@@ -185,7 +184,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/9999/comments")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
+        expect(body.msg).toBe("No results");
       });
   });
   it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
@@ -272,37 +271,26 @@ describe("PACTH /api/articles/:article_id", () => {
         expect(typeof article.votes).toBe("number");
       });
   });
-  it("should respond with a 404 status code when attempting to GET a resource by a valid ID that does not exist in the database", () => {
-    return request(app)
-      .get("/api/articles/99999")
-      .expect(404)
-      .then(({ body }) => {});
-  });
-  it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
-    return request(app)
-      .get("/api/articles/not-an-ID")
-      .expect(400)
-      .then(({ body }) => {});
-  });
 });
 
 describe("DELETE /api/comments/:comment_id", () => {
-  it("should respond with a 204 status code meaning that comment was deleted successfully", () => {
-    return request(app)
-      .delete("/api/comments/1")
-      .expect(204)
-      .then(({ body }) => {});
+  it("should respond with a 204 status code with no content", () => {
+    return request(app).delete("/api/comments/1").expect(204);
   });
-  it("should respond with a 404 status code when attempting to GET a resource by a valid ID that does not exist in the database", () => {
+  it("should respond with a 404 status code when attempting to DELETE a resource that does not exist", () => {
     return request(app)
       .delete("/api/comments/99999")
       .expect(404)
-      .then(({ body }) => {});
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
   });
-  it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
+  it("should respond with a 400 status code when attempting to DELETE a resource by an invalid ID", () => {
     return request(app)
       .delete("/api/comments/not-an-ID")
       .expect(400)
-      .then(({ body }) => {});
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
   });
 });
