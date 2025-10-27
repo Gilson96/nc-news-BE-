@@ -11,7 +11,7 @@ exports.commentsByArticleId = (article_id) => {
     });
 };
 
-exports.commentsById = (comment_id) => {
+exports.deleteCommentsById = (comment_id) => {
   return db
     .query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *;`, [
       comment_id,
