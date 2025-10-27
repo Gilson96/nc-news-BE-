@@ -37,15 +37,14 @@ app.patch("/api/articles/:article_id", editArticle);
 
 app.delete("/api/comments/:comment_id", deleteComment);
 
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(404).send({ msg: "Route Not Found!" });
-  next(err);
-});
-
 app.use(handlePsqlError);
 app.use(handleCustomError);
 app.use(handleSeverError);
+
+// app.use((err, req, res, next) => {
+//   res.status(404).send({ msg: "Not Found!" });
+//   next(err);
+// });
 
 app.listen(9090, () => {
   console.log("Server is listening on port 9090...");
