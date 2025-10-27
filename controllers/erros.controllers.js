@@ -17,5 +17,5 @@ exports.handleCustomError = (err, req, res, next) => {
 };
 
 exports.handleSeverError = (err, req, res, next) => {
-  res.status(500).send({ msg: "bad request" });
+  res.status(500).send({ msg: "Somenthing went wrong!" });
 };
