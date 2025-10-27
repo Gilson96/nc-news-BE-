@@ -1,11 +1,11 @@
 const db = require("../db/connection");
 const format = require("pg-format");
 
-exports.articles = (sortby = "created_at", order = "DESC", topic) => {
+exports.articles = (sort_by, order, topic) => {
   const articlesFormat = format(
     `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id ${
       topic !== undefined ? `WHERE topic ILIKE '%${topic}%'` : ""
-    }  GROUP BY articles.article_id ORDER BY ${sortby} ${order};`
+    }  GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`
   );
   return db.query(articlesFormat).then(({ rows }) => {
     return rows;

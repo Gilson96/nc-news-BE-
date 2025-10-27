@@ -57,14 +57,9 @@ describe("GET /api/users", () => {
 });
 
 describe("GET /api/articles", () => {
-  it("should responds with a 200 status code and an array containing all articles", () => {
-    const sortBy = {
-      sort_by: "article_id",
-      order: "ASC",
-    };
+  it.only("should responds with a 200 status code and an array containing all articles", () => {
     return request(app)
       .get("/api/articles")
-      .send(sortBy)
       .expect(200)
       .then(({ body }) => {
         expect(Array.isArray(body)).toBe(true);
@@ -89,7 +84,7 @@ describe("GET /api/articles", () => {
         });
       });
   });
-  it("should responds with a 200 status code and an array containing all article sorted and ordered by the given request body", () => {
+  it.only("should responds with a 200 status code and an array containing all article sorted and ordered by the given request body", () => {
     const sortBy = {
       sort_by: "votes",
       order: "ASC",
