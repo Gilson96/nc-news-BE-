@@ -40,8 +40,4 @@ app.use(handlePsqlError);
 app.use(handleCustomError);
 app.use(handleSeverError);
 
-app.listen(9090, () => {
-  console.log("Server is listening on port 9090...");
-});
-
 module.exports = app;
