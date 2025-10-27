@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const db = require("./db/connection");
 const { getAllTopics } = require("./controllers/topics");
 const { getAllUsers } = require("./controllers/users");
 const {
@@ -40,11 +39,6 @@ app.delete("/api/comments/:comment_id", deleteComment);
 app.use(handlePsqlError);
 app.use(handleCustomError);
 app.use(handleSeverError);
-
-// app.use((err, req, res, next) => {
-//   res.status(404).send({ msg: "Not Found!" });
-//   next(err);
-// });
 
 app.listen(9090, () => {
   console.log("Server is listening on port 9090...");
