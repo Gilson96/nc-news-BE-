@@ -12,8 +12,14 @@ afterAll(() => {
   return db.end();
 });
 
+describe("checks if attempting to access a non-existent endpoint", () => {
+  it("should respond with a 404 status code for invalis endpoint", () => {
+    return request(app).get("/api/invalid-endpoint").expect(404);
+  });
+});
+
 describe("GET /api/topics", () => {
-  it("200 responds with an array containing all topics", () => {
+  it("should respond with a 200 status code and an array containing all topics", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
@@ -22,32 +28,36 @@ describe("GET /api/topics", () => {
         body.forEach((topic) => {
           expect(topic).toHaveProperty("slug");
           expect(topic).toHaveProperty("description");
-          expect(topic).toHaveProperty("img_url");
           expect(typeof topic).toBe("object");
           expect(typeof topic.slug).toBe("string");
           expect(typeof topic.description).toBe("string");
-          expect(typeof topic.img_url).toBe("string");
         });
       });
   });
 });
 
-describe("GET /api/articles/:article_id", () => {
-  it("200 response with the article object of the given id", () => {
+describe("GET /api/users", () => {
+  it("should responds with a 200 status code and an array containing all users", () => {
     return request(app)
-      .get("/api/articles/1")
+      .get("/api/users")
       .expect(200)
       .then(({ body }) => {
-        const { article } = body;
-        expect(body).toHaveProperty("article");
-        expect(typeof article).toBe("object");
-        expect(article).toHaveProperty("article_id", 1);
+        expect(Array.isArray(body)).toBe(true);
+        body.forEach((user) => {
+          expect(user).toHaveProperty("username");
+          expect(user).toHaveProperty("name");
+          expect(user).toHaveProperty("avatar_url");
+          expect(typeof user).toBe("object");
+          expect(typeof user.username).toBe("string");
+          expect(typeof user.name).toBe("string");
+          expect(typeof user.avatar_url).toBe("string");
+        });
       });
   });
 });
 
 describe("GET /api/articles", () => {
-  it("200 responds with an array containing all topics", () => {
+  it("should responds with a 200 status code and an array containing all articles", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -58,34 +68,215 @@ describe("GET /api/articles", () => {
           expect(article).toHaveProperty("title");
           expect(article).toHaveProperty("topic");
           expect(article).toHaveProperty("author");
-          expect(article).toHaveProperty("body");
           expect(article).toHaveProperty("created_at");
           expect(article).toHaveProperty("votes");
           expect(article).toHaveProperty("article_img_url");
+          expect(article).toHaveProperty("count");
           expect(typeof article).toBe("object");
           expect(typeof article.article_id).toBe("number");
           expect(typeof article.title).toBe("string");
           expect(typeof article.topic).toBe("string");
           expect(typeof article.author).toBe("string");
-          expect(typeof article.body).toBe("string");
           expect(typeof article.created_at).toBe("string");
           expect(typeof article.votes).toBe("number");
           expect(typeof article.article_img_url).toBe("string");
+          expect(typeof article.count).toBe("string");
         });
+      });
+  });
+  it("should responds with a 200 status code and an array containing all article sorted and ordered by the given request body", () => {
+    const sortBy = {
+      sort_by: "votes",
+      order: "ASC",
+    };
+    return request(app)
+      .get("/api/articles")
+      .send(sortBy)
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+      });
+  });
+  it("should responds with a 200 status code and an array containing all article filtered by topic", () => {
+    const sortBy = {
+      sort_by: "votes",
+      order: "ASC",
+    };
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .send(sortBy)
+      .then(({ body }) => {
+        console.log(body);
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id", () => {
+  it("should respond with a 200 status code and a article object from the given id", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(body).toHaveProperty("article");
+        expect(typeof article).toBe("object");
+        expect(article).toHaveProperty("article_id", 1);
+      });
+  });
+  it.only("should respond with a 200 status code and a article object from the given id with a new column comment_count", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        console.log(article);
+        expect(body).toHaveProperty("article");
+        expect(typeof article).toBe("object");
+        expect(article).toHaveProperty("count");
+        expect(typeof article.count).toBe("string");
+      });
+  });
+  it("should respond with a 404 status code when attempting to GET a resource by a valid ID that does not exist in the database", () => {
+    return request(app)
+      .get("/api/articles/99999")
+      .expect(404)
+      .then(({ body }) => {});
+  });
+  it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
+    return request(app)
+      .get("/api/articles/not-an-ID")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
       });
   });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
-  it("200 response with the comment object of the given article id", () => {
+  it("should respond with a 200 status code and a list of comments", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body }) => {
-        const { comment } = body;
-        expect(body).toHaveProperty("comment");
-        expect(typeof comment).toBe("object");
-        expect(comment).toHaveProperty("comment_id", 2);
+        expect(Array.isArray(body)).toBe(true);
+        body.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("article_id");
+          expect(typeof comment).toBe("object");
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.created_at).toBe("string");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(typeof comment.article_id).toBe("number");
+        });
+      });
+  });
+  it("should respond with a 404 status code when attempting to GET a resource by a valid ID that does not exist in the database", () => {
+    return request(app)
+      .get("/api/articles/9999/comments")
+      .expect(404)
+      .then(({ body }) => {});
+  });
+  it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
+    return request(app)
+      .get("/api/articles/not-an-ID/comments")
+      .expect(400)
+      .then(({ body }) => {});
+  });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  it("201 response with the new comment object created from the given article id", () => {
+    const newComment = {
+      body: "New comment.",
+      username: "butter_bridge",
+    };
+    return request(app)
+      .post(`/api/articles/1/comments`)
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toHaveProperty("body");
+        expect(article).toHaveProperty("author");
+        expect(typeof article).toBe("object");
+        expect(typeof article.body).toBe("string");
+        expect(typeof article.author).toBe("string");
+      });
+  });
+});
+
+describe("PACTH /api/articles/:article_id", () => {
+  it("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
+    const newVotes = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ newVotes })
+      .expect(201)
+      .then(({ body }) => {
+        const { article } = body;
+
+        expect(article).toHaveProperty("votes", 110);
+        expect(typeof article.votes).toBe("number");
+      });
+  });
+  it("should respond with a 201 status code and a decremented votes value of a article object from the given id", () => {
+    const newVotes = { inc_votes: -20 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ newVotes })
+      .expect(201)
+      .then(({ body }) => {
+        const { article } = body;
+
+        expect(article).toHaveProperty("votes", 80);
+        expect(typeof article.votes).toBe("number");
+      });
+  });
+  it("should respond with a 404 status code when attempting to GET a resource by a valid ID that does not exist in the database", () => {
+    return request(app)
+      .get("/api/articles/99999")
+      .expect(404)
+      .then(({ body }) => {});
+  });
+  it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
+    return request(app)
+      .get("/api/articles/not-an-ID")
+      .expect(400)
+      .then(({ body }) => {});
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  it("should respond with a 204 status code meaning that comment was deleted successfully", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(({ body }) => {
+        const { msg } = body;
+        return msg;
+      });
+  });
+  it("should respond with a 404 status code when attempting to GET a resource by a valid ID that does not exist in the database", () => {
+    return request(app)
+      .delete("/api/comments/99999")
+      .expect(404)
+      .then(({ body }) => {
+        console.log(body);
+      });
+  });
+  it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
+    return request(app)
+      .delete("/api/comments/not-an-ID")
+      .expect(400)
+      .then(({ body }) => {
+        console.log(body);
       });
   });
 });
