@@ -13,7 +13,7 @@ afterAll(() => {
 });
 
 describe("checks if attempting to access a non-existent endpoint", () => {
-  it("should respond with a 404 status code for invalis endpoint", () => {
+  it.only("should respond with a 404 status code for invalis endpoint", () => {
     return request(app).get("/api/invalid-endpoint").expect(404);
   });
 });
@@ -58,8 +58,13 @@ describe("GET /api/users", () => {
 
 describe("GET /api/articles", () => {
   it("should responds with a 200 status code and an array containing all articles", () => {
+    const sortBy = {
+      sort_by: "article_id",
+      order: "ASC",
+    };
     return request(app)
       .get("/api/articles")
+      .send(sortBy)
       .expect(200)
       .then(({ body }) => {
         expect(Array.isArray(body)).toBe(true);
@@ -93,9 +98,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .send(sortBy)
       .expect(200)
-      .then(({ body }) => {
-        console.log(body);
-      });
+      .then(({ body }) => {});
   });
   it("should responds with a 200 status code and an array containing all article filtered by topic", () => {
     const sortBy = {
@@ -106,9 +109,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles?topic=cats")
       .expect(200)
       .send(sortBy)
-      .then(({ body }) => {
-        console.log(body);
-      });
+      .then(({ body }) => {});
   });
 });
 
@@ -119,18 +120,18 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
+        console.log(article);
         expect(body).toHaveProperty("article");
         expect(typeof article).toBe("object");
         expect(article).toHaveProperty("article_id", 1);
       });
   });
-  it.only("should respond with a 200 status code and a article object from the given id with a new column comment_count", () => {
+  it("should respond with a 200 status code and a article object from the given id with a new column comment_count", () => {
     return request(app)
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article);
         expect(body).toHaveProperty("article");
         expect(typeof article).toBe("object");
         expect(article).toHaveProperty("count");
@@ -141,7 +142,9 @@ describe("GET /api/articles/:article_id", () => {
     return request(app)
       .get("/api/articles/99999")
       .expect(404)
-      .then(({ body }) => {});
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
   });
   it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
     return request(app)
@@ -181,18 +184,22 @@ describe("GET /api/articles/:article_id/comments", () => {
     return request(app)
       .get("/api/articles/9999/comments")
       .expect(404)
-      .then(({ body }) => {});
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
   });
   it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
     return request(app)
       .get("/api/articles/not-an-ID/comments")
       .expect(400)
-      .then(({ body }) => {});
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
   });
 });
 
 describe("POST /api/articles/:article_id/comments", () => {
-  it("201 response with the new comment object created from the given article id", () => {
+  it("should respond with a 201 and a new comment object created from the given article id", () => {
     const newComment = {
       body: "New comment.",
       username: "butter_bridge",
@@ -208,6 +215,32 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(typeof article).toBe("object");
         expect(typeof article.body).toBe("string");
         expect(typeof article.author).toBe("string");
+      });
+  });
+  it("should respond with a 400 status code when attempting to POST with incorrect fields", () => {
+    const newComment = {
+      title: "New comment.",
+      username: "butter_bridge",
+    };
+    return request(app)
+      .post(`/api/articles/1/comments`)
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  it("should respond with a 400 status code when attempting to POST with valid fields but the value of a field is invalid", () => {
+    const newComment = {
+      body: 1,
+      username: "butter_bridge",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
       });
   });
 });
@@ -258,25 +291,18 @@ describe("DELETE /api/comments/:comment_id", () => {
     return request(app)
       .delete("/api/comments/1")
       .expect(204)
-      .then(({ body }) => {
-        const { msg } = body;
-        return msg;
-      });
+      .then(({ body }) => {});
   });
   it("should respond with a 404 status code when attempting to GET a resource by a valid ID that does not exist in the database", () => {
     return request(app)
       .delete("/api/comments/99999")
       .expect(404)
-      .then(({ body }) => {
-        console.log(body);
-      });
+      .then(({ body }) => {});
   });
   it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
     return request(app)
       .delete("/api/comments/not-an-ID")
       .expect(400)
-      .then(({ body }) => {
-        console.log(body);
-      });
+      .then(({ body }) => {});
   });
 });
