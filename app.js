@@ -1,36 +1,51 @@
 const express = require("express");
 const app = express();
 const db = require("./db/connection");
+const { getAllTopics } = require("./controllers/topics");
+const { getAllUsers } = require("./controllers/users");
+const {
+  getAllArticles,
+  getArticleById,
+  editArticle,
+  addArticles,
+} = require("./controllers/articles");
+const {
+  getCommentsByArticleId,
+  deleteComment,
+} = require("./controllers/comments");
+const {
+  handlePsqlError,
+  handleCustomError,
+  handleSeverError,
+} = require("./controllers/erros.controllers");
 
-app.get("/api/topics", (req, res) => {
-  return db.query("SELECT * FROM topics;").then(({ rows }) => {
-    return res.status(200).send(rows);
-  });
+app.use(express.json());
+
+app.get("/api/topics", getAllTopics);
+
+app.get("/api/users", getAllUsers);
+
+app.get("/api/articles", getAllArticles);
+
+app.get("/api/articles/:article_id", getArticleById);
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+
+app.post("/api/articles/:article_id/comments", addArticles);
+
+app.patch("/api/articles/:article_id", editArticle);
+
+app.delete("/api/comments/:comment_id", deleteComment);
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(404).send({ msg: "Route Not Found!" });
+  next(err);
 });
 
-app.get("/api/articles/:article_id", (req, res) => {
-  const article_id = req.params.article_id;
-  return db
-    .query("SELECT * FROM articles WHERE article_id = $1;", [article_id])
-    .then(({ rows }) => {
-      return res.status(200).send({ article: rows[0] });
-    });
-});
-
-app.get("/api/articles", (req, res) => {
-  return db.query("SELECT * FROM articles;").then(({ rows }) => {
-    return res.status(200).send(rows);
-  });
-});
-
-app.get("/api/articles/:article_id/comments", (req, res) => {
-  const article_id = req.params.article_id;
-  return db
-    .query("SELECT * FROM comments WHERE article_id = $1;", [article_id])
-    .then(({ rows }) => {
-      return res.status(200).send({ comment: rows[0] });
-    });
-});
+app.use(handlePsqlError);
+app.use(handleCustomError);
+app.use(handleSeverError);
 
 app.listen(9090, () => {
   console.log("Server is listening on port 9090...");
