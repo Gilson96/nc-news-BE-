@@ -1,0 +1,45 @@
+<!-- 
+A title for your API
+Navigation section for different endpoints
+A section for each endpoint available on your API, and a details on how it can be used. Ensure that this includes the following where applicable:
+A brief description of the purpose and functionality of the endpoint
+Acceptable queries
+The format of the request body
+An example response
+Any other information you think might be helpful!  -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>NC-News-API</title>
+  </head>
+  <body>
+    <h1 class="page-title">NC-News-API</h1>
+    <nav class="navigator">
+      <select class="navigator-select" name="get" id="get-select">
+        <option value="" class="link-title">GET</option>
+        <option value="users"><a>/api/users</a></option>
+        <option value="topics"><a>/api/topics</a></option>
+        <option value="articles"><a>/api/articles</a></option>
+        <option value="comments" class="navigator-select-option">
+          <a>/api/articles/:article_id/comments</a>
+        </option>
+      </select>
+      <select class="navigator-select">
+        <option value="" class="link-title">POST</option>
+        <option><a>/api/articles/:article_id/comments</a></option>
+      </select>
+      <select class="navigator-select">
+        <option value="" class="link-title">PATCH</option>
+        <option><a>/api/articles/:article_id</a></option>
+      </select>
+      <select class="navigator-select">
+        <option value="" class="link-title">DELETE</option>
+        <option><a>/api/comments/:comment_id</a></option>
+      </select>
+    </nav>
+  </body>
+</html>

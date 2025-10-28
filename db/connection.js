@@ -7,7 +7,6 @@ const ENV = process.env.NODE_ENV || "development";
 
 let config = {};
 
-
 if (ENV === "production") {
   config = {
     connectionString: process.env.DATABASE_URL,

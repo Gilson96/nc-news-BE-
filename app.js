@@ -20,6 +20,8 @@ const {
 
 app.use(express.json());
 
+
+app.use('/api', express.static('public'))
 app.get("/api/topics", getAllTopics);
 
 app.get("/api/users", getAllUsers);
