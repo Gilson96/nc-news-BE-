@@ -90,11 +90,11 @@ describe("GET /api/articles", () => {
       order: "DESC",
     };
     return request(app)
-      .get("/api/articles?sort_by&order")
+      .get("/api/articles?topic=mitch")
       .send(sortBy)
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
+        // console.log(body);
       });
   });
   it("should responds with a 200 status code and an array containing all article filtered by topic", () => {
