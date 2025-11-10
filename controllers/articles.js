@@ -6,8 +6,8 @@ const {
 } = require("../models/articles");
 
 exports.getAllArticles = (req, res) => {
-  let sort_by = "created_at";
-  let order = "DESC";
+  let sort_by = "";
+  let order = "";
   const { topic } = req.query;
 
   if (req.body !== undefined) {
