@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const { getAllTopics } = require("./controllers/topics");
 const { getAllUsers } = require("./controllers/users");
 const {
@@ -18,10 +19,10 @@ const {
   handleSeverError,
 } = require("./controllers/erros.controllers");
 
+app.use(cors());
 app.use(express.json());
 
-
-app.use('/api', express.static('public'))
+app.use("/api", express.static("public"));
 app.get("/api/topics", getAllTopics);
 
 app.get("/api/users", getAllUsers);
