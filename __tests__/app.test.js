@@ -85,13 +85,8 @@ describe("GET /api/articles", () => {
       });
   });
   it.only("should responds with a 200 status code and an array containing all article sorted and ordered by the given request body", () => {
-    const sortBy = {
-      sort_by: "article_id",
-      order: "DESC",
-    };
     return request(app)
-      .get("/api/articles?sort_by&order&topic=cats")
-      .send(sortBy)
+      .get("/api/articles?sort_by=article_id&order=ASC&topic=mitch")
       .expect(200)
       .then(({ body }) => {
         console.log(body);

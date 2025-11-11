@@ -6,14 +6,11 @@ const {
 } = require("../models/articles");
 
 exports.getAllArticles = (req, res) => {
-  let sort_by = "created_at";
-  let order = "DESC";
+  const { sort_by } = req.query;
+  const { order } = req.query;
   const { topic } = req.query;
 
-  if (req.body !== undefined) {
-    sort_by = req.body.sort_by;
-    order = req.body.order;
-  }
+  console.log(req.query);
 
   return articles(sort_by, order, topic).then((articles) => {
     return res.status(200).send(articles);
