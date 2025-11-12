@@ -43,7 +43,7 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", addArticles);
 
-app.patch("/api/articles/:article_id", editArticle);
+app.put("/api/articles/:article_id", editArticle);
 
 app.delete("/api/comments/:comment_id", deleteComment);
 

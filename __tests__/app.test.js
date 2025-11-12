@@ -273,7 +273,7 @@ xdescribe("POST /api/articles/:article_id/comments", () => {
 describe("PACTH /api/articles/:article_id", () => {
   it("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
     return request(app)
-      .patch("/api/articles/1")
+      .put("/api/articles/1")
       .send({ votes: 10 })
       .expect(201)
       .then(({ body }) => {
