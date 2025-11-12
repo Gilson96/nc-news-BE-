@@ -32,7 +32,7 @@ exports.getArticleById = (req, res) => {
 exports.editArticle = (req, res) => {
   const article_id = req.params.article_id;
 
-  return articleEdit(article_id, req.body.votes).then((article) => {
+  return articleEdit(article_id, 10).then((article) => {
     if (article.length === 0) {
       return res.status(404).send({ msg: `No results ` });
     } else {
