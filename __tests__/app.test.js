@@ -273,24 +273,22 @@ xdescribe("POST /api/articles/:article_id/comments", () => {
 describe("PACTH /api/articles/:article_id", () => {
   it("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
     return request(app)
-      .put("/api/articles/1")
+      .patch("/api/articles/1")
       .send({ votes: 10 })
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article);
         expect(article).toHaveProperty("votes", 110);
         expect(typeof article.votes).toBe("number");
       });
   });
-  xit("should respond with a 201 status code and a decremented votes value of a article object from the given id", () => {
+  it("should respond with a 201 status code and a decremented votes value of a article object from the given id", () => {
     return request(app)
       .patch("/api/articles/1")
       .send({ votes: -20 })
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article);
         expect(article).toHaveProperty("votes", 80);
         expect(typeof article.votes).toBe("number");
       });
