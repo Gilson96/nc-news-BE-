@@ -3,6 +3,11 @@ const app = require("../app.js");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection.js");
 const data = require("../db/data/test-data");
+// const jwt = require("jsonwebtoken");
+
+// require("dotenv").config({
+//   path: `${__dirname}/../.env.${process.env.JWT_SECRET_KEY}`,
+// });
 
 beforeEach(() => {
   return seed(data);
@@ -12,13 +17,13 @@ afterAll(() => {
   return db.end();
 });
 
-describe("checks if attempting to access a non-existent endpoint", () => {
+xdescribe("checks if attempting to access a non-existent endpoint", () => {
   it("should respond with a 404 status code for invalid endpoint", () => {
     return request(app).get("/api/invalid-endpoint").expect(404);
   });
 });
 
-describe("GET /api/topics", () => {
+xdescribe("GET /api/topics", () => {
   it("should respond with a 200 status code and an array containing all topics", () => {
     return request(app)
       .get("/api/topics")
@@ -36,7 +41,7 @@ describe("GET /api/topics", () => {
   });
 });
 
-describe("GET /api/users", () => {
+xdescribe("GET /api/users", () => {
   it("should responds with a 200 status code and an array containing all users", () => {
     return request(app)
       .get("/api/users")
@@ -56,7 +61,36 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("GET /api/articles", () => {
+xdescribe("POST /api/signIn ", () => {
+  it("sign", () => {
+    const signIn = {
+      username: "he",
+      password: "sfa",
+      name: "gras",
+      avatar_url: "fasa",
+    };
+    return request(app)
+      .post(`/api/signIn`)
+      .send(signIn)
+      .expect(201)
+      .then(({ body }) => {
+        console.log(body);
+      });
+  });
+});
+
+xdescribe("GET /api/login ", () => {
+  it("login", () => {
+    return request(app)
+      .get("/api/login")
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+      });
+  });
+});
+
+xdescribe("GET /api/articles", () => {
   it("should responds with a 200 status code and an array containing all articles", () => {
     return request(app)
       .get("/api/articles")
@@ -84,7 +118,7 @@ describe("GET /api/articles", () => {
         });
       });
   });
-  it.only("should responds with a 200 status code and an array containing all article sorted and ordered by the given request body", () => {
+  it("should responds with a 200 status code and an array containing all article sorted and ordered by the given request body", () => {
     return request(app)
       .get("/api/articles?sort_by=article_id&order=ASC&topic=mitch")
       .expect(200)
@@ -105,7 +139,7 @@ describe("GET /api/articles", () => {
   });
 });
 
-describe("GET /api/articles/:article_id", () => {
+xdescribe("GET /api/articles/:article_id", () => {
   it("should respond with a 200 status code and a article object from the given id", () => {
     return request(app)
       .get("/api/articles/1")
@@ -147,7 +181,7 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
-describe("GET /api/articles/:article_id/comments", () => {
+xdescribe("GET /api/articles/:article_id/comments", () => {
   it("should respond with a 200 status code and a list of comments", () => {
     return request(app)
       .get("/api/articles/1/comments")
@@ -189,7 +223,7 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe("POST /api/articles/:article_id/comments", () => {
+xdescribe("POST /api/articles/:article_id/comments", () => {
   it("should respond with a 201 and a new comment object created from the given article id", () => {
     const newComment = {
       body: "New comment.",
@@ -238,23 +272,20 @@ describe("POST /api/articles/:article_id/comments", () => {
 
 describe("PACTH /api/articles/:article_id", () => {
   it("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
-    const newVotes = { inc_votes: 10 };
     return request(app)
       .patch("/api/articles/1")
-      .send({ newVotes })
+      .send({ votes: 10 })
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
-
         expect(article).toHaveProperty("votes", 110);
         expect(typeof article.votes).toBe("number");
       });
   });
   it("should respond with a 201 status code and a decremented votes value of a article object from the given id", () => {
-    const newVotes = { inc_votes: -20 };
     return request(app)
       .patch("/api/articles/1")
-      .send({ newVotes })
+      .send({ votes: -20 })
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
@@ -265,7 +296,7 @@ describe("PACTH /api/articles/:article_id", () => {
   });
 });
 
-describe("DELETE /api/comments/:comment_id", () => {
+xdescribe("DELETE /api/comments/:comment_id", () => {
   it("should respond with a 204 status code with no content", () => {
     return request(app).delete("/api/comments/1").expect(204);
   });

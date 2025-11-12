@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const dotenv = require("dotenv");
+
 const { getAllTopics } = require("./controllers/topics");
 const { getAllUsers } = require("./controllers/users");
 const {
@@ -18,14 +20,20 @@ const {
   handleCustomError,
   handleSeverError,
 } = require("./controllers/erros.controllers");
+const { login, signIn } = require("./controllers/authentication");
 
 app.use(cors());
 app.use(express.json());
 
 app.use("/api", express.static("public"));
+
 app.get("/api/topics", getAllTopics);
 
 app.get("/api/users", getAllUsers);
+
+app.post("/api/signIn", signIn);
+
+app.get("/api/login", login);
 
 app.get("/api/articles", getAllArticles);
 

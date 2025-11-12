@@ -22,6 +22,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     .then(() => {
       return db.query(`CREATE TABLE users(
         username VARCHAR(255) PRIMARY KEY,
+        password VARCHAR(255),
         name VARCHAR(255),
         avatar_url VARCHAR(1000) 
         );`);
@@ -53,11 +54,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
         return [topic.slug, topic.description, topic.img_url];
       });
       const insertIntoTopics = format(
-        `INSERT INTO topics
-    (slug, description, img_url)
-  VALUES
-    %L
-  RETURNING *;`,
+        `INSERT INTO topics (slug, description, img_url) VALUES %L RETURNING *;`,
         formatTopicsData
       );
 
@@ -65,14 +62,11 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     })
     .then(() => {
       const formatUsersData = userData.map((user) => {
-        return [user.username, user.name, user.avatar_url];
+        return [user.username, user.password, user.name, user.avatar_url];
       });
       const insertIntoUsers = format(
-        `INSERT INTO users
-    (username, name, avatar_url)
-  VALUES
-    %L
-  RETURNING *;`,
+        `INSERT INTO users 
+        (username, password, name, avatar_url) VALUES %L RETURNING *;`,
         formatUsersData
       );
       return db.query(insertIntoUsers);
@@ -130,8 +124,5 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       );
       return db.query(insertIntoComments);
     });
-  // .then((commentResult) => {
-  //   console.log(commentResult.rows);
-  // });
 };
 module.exports = seed;
