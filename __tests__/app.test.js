@@ -223,8 +223,8 @@ xdescribe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-xdescribe("POST /api/articles/:article_id/comments", () => {
-  it("should respond with a 201 and a new comment object created from the given article id", () => {
+describe("POST /api/articles/:article_id/comments", () => {
+  it.only("should respond with a 201 and a new comment object created from the given article id", () => {
     const newComment = {
       body: "New comment.",
       username: "butter_bridge",
@@ -235,6 +235,7 @@ xdescribe("POST /api/articles/:article_id/comments", () => {
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
+        console.log(article)
         expect(article).toHaveProperty("body");
         expect(article).toHaveProperty("author");
         expect(typeof article).toBe("object");

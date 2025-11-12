@@ -34,12 +34,12 @@ exports.articleEdit = (article_id, votes) => {
     });
 };
 
-exports.articleAdd = (body, username) => {
+exports.comment = (article_id, body, author) => {
   return db
-    .query(`INSERT INTO articles (body, author) VALUES($1, $2) RETURNING *;`, [
-      body,
-      username,
-    ])
+    .query(
+      `INSERT INTO comments (article_id, body, author) VALUES($1, $2, $3)  RETURNING *;`,
+      [article_id, body, author]
+    )
     .then(({ rows }) => {
       return rows;
     });

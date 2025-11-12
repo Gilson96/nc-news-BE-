@@ -3,6 +3,7 @@ const {
   articlesById,
   articleEdit,
   articleAdd,
+  comment,
 } = require("../models/articles");
 
 exports.getAllArticles = (req, res) => {
@@ -31,9 +32,7 @@ exports.getArticleById = (req, res) => {
 
 exports.editArticle = (req, res) => {
   const article_id = req.params.article_id;
-  const { votes } = req.body;
 
-  console.log(req.body);
   return articleEdit(article_id, req.body.votes).then((article) => {
     if (article.length === 0) {
       return res.status(404).send({ msg: `No results ` });
@@ -44,9 +43,11 @@ exports.editArticle = (req, res) => {
   });
 };
 
-exports.addArticles = (req, res) => {
+exports.createComment = (req, res) => {
+  const article_id = req.params.article_id;
   const { body } = req.body;
   const { username } = req.body;
+  const convertedArticle_id = Number(article_id);
 
   if (body === undefined || username === undefined) {
     return res.status(400).send({ msg: `Bad request` });
@@ -56,7 +57,7 @@ exports.addArticles = (req, res) => {
     return res.status(400).send({ msg: `Bad request` });
   }
 
-  return articleAdd(body, username).then((article) => {
+  return comment(convertedArticle_id, body, username).then((article) => {
     return res.status(201).send({ article: article[0] });
   });
 };

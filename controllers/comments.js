@@ -1,4 +1,8 @@
-const { commentsByArticleId, deleteCommentsById } = require("../models/comments");
+const {
+  commentsByArticleId,
+  deleteCommentsById,
+  create,
+} = require("../models/comments");
 
 exports.getCommentsByArticleId = (req, res) => {
   const article_id = req.params.article_id;
