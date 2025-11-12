@@ -271,10 +271,11 @@ xdescribe("POST /api/articles/:article_id/comments", () => {
 });
 
 describe("PACTH /api/articles/:article_id", () => {
-  it("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
+  it.only("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
+    const newVotes = { votes: 10 };
     return request(app)
       .patch("/api/articles/1")
-      .send({ votes: 10 })
+      .send(newVotes)
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
