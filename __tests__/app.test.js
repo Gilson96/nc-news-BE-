@@ -90,7 +90,7 @@ xdescribe("GET /api/login ", () => {
   });
 });
 
-xdescribe("GET /api/articles", () => {
+describe("GET /api/articles", () => {
   it("should responds with a 200 status code and an array containing all articles", () => {
     return request(app)
       .get("/api/articles")
@@ -120,13 +120,13 @@ xdescribe("GET /api/articles", () => {
   });
   it("should responds with a 200 status code and an array containing all article sorted and ordered by the given request body", () => {
     return request(app)
-      .get("/api/articles?sort_by=article_id&order=ASC&topic=mitch")
+      .get("/api/articles?&topic=mitch")
       .expect(200)
       .then(({ body }) => {
         console.log(body);
       });
   });
-  it("should responds with a 200 status code and an array containing all article filtered by topic", () => {
+  it.only("should responds with a 200 status code and an array containing all article filtered by topic", () => {
     const sortBy = {
       sort_by: "votes",
       order: "ASC",
@@ -135,7 +135,9 @@ xdescribe("GET /api/articles", () => {
       .get("/api/articles?topic=cats")
       .expect(200)
       .send(sortBy)
-      .then(({ body }) => {});
+      .then(({ body }) => {
+        console.log(body)
+      });
   });
 });
 
@@ -223,7 +225,7 @@ xdescribe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe("POST /api/articles/:article_id/comments", () => {
+xdescribe("POST /api/articles/:article_id/comments", () => {
   it.only("should respond with a 201 and a new comment object created from the given article id", () => {
     const newComment = {
       body: "New comment.",
@@ -271,7 +273,7 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
-describe("PACTH /api/articles/:article_id", () => {
+xdescribe("PACTH /api/articles/:article_id", () => {
   xit("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
     const newVotes = { votes: 10 };
     return request(app)

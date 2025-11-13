@@ -1,7 +1,7 @@
 const db = require("../db/connection");
 const format = require("pg-format");
 
-exports.articles = (sort_by, order, topic) => {
+exports.articles = (sort_by = 'created_at', order = 'DESC', topic) => {
   const articlesFormat = format(
     `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id ${
       topic !== undefined ? `WHERE topic ILIKE '%${topic}%'` : ""
