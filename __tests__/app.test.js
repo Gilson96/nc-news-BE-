@@ -61,36 +61,71 @@ xdescribe("GET /api/users", () => {
   });
 });
 
-xdescribe("POST /api/signIn ", () => {
-  it("sign", () => {
-    const signIn = {
-      username: "he",
-      password: "sfa",
-      name: "gras",
-      avatar_url: "fasa",
+describe("POST /api/users/article", () => {
+  it.only("should responds with a 201 status code and an object containing created article", () => {
+    const newArticle = {
+      title: "New article",
+      topic: "mitch",
+      author: "butter_bridge",
+      article_img_url: "",
     };
     return request(app)
-      .post(`/api/signIn`)
-      .send(signIn)
+      .post("/api/users/article")
+      .send(newArticle)
       .expect(201)
       .then(({ body }) => {
-        console.log(body);
+        const { article } = body;
+        console.log(article);
+        expect(article).toHaveProperty("article_id");
+        expect(article).toHaveProperty("title");
+        expect(article).toHaveProperty("topic");
+        expect(article).toHaveProperty("author");
+        expect(article).toHaveProperty("created_at");
+        expect(article).toHaveProperty("votes");
+        expect(article).toHaveProperty("article_img_url");
+        expect(typeof article).toBe("object");
+        expect(typeof article.article_id).toBe("number");
+        expect(typeof article.title).toBe("string");
+        expect(typeof article.topic).toBe("string");
+        expect(typeof article.author).toBe("string");
+        expect(typeof article.created_at).toBe("string");
+        expect(typeof article.votes).toBe("number");
+        expect(typeof article.article_img_url).toBe("string");
       });
   });
-});
-
-xdescribe("GET /api/login ", () => {
-  it("login", () => {
+  it.only("should respond with a 400 status code when attempting to POST with incorrect fields", () => {
+    const newArticle = {
+      name: "New article",
+      topic: "mitch",
+      author: "butter_bridge",
+      article_img_url: "",
+    };
     return request(app)
-      .get("/api/login")
-      .expect(200)
+      .post(`/api/users/article`)
+      .send(newArticle)
+      .expect(400)
       .then(({ body }) => {
-        console.log(body);
+        expect(body.msg).toBe("Invalid field");
+      });
+  });
+  it.only("should respond with a 400 status code when attempting to POST with valid fields but the value of a field is invalid", () => {
+    const newArticle = {
+      title: 1,
+      topic: "mitch",
+      author: "butter_bridge",
+      article_img_url: "",
+    };
+    return request(app)
+      .post("/api/users/article")
+      .send(newArticle)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid value");
       });
   });
 });
 
-describe("GET /api/articles", () => {
+xdescribe("GET /api/articles", () => {
   it("should responds with a 200 status code and an array containing all articles", () => {
     return request(app)
       .get("/api/articles")
@@ -126,7 +161,7 @@ describe("GET /api/articles", () => {
         console.log(body);
       });
   });
-  it.only("should responds with a 200 status code and an array containing all article filtered by topic", () => {
+  it("should responds with a 200 status code and an array containing all article filtered by topic", () => {
     const sortBy = {
       sort_by: "votes",
       order: "ASC",
@@ -136,7 +171,7 @@ describe("GET /api/articles", () => {
       .expect(200)
       .send(sortBy)
       .then(({ body }) => {
-        console.log(body)
+        console.log(body);
       });
   });
 });
@@ -237,7 +272,7 @@ xdescribe("POST /api/articles/:article_id/comments", () => {
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article)
+        console.log(article);
         expect(article).toHaveProperty("body");
         expect(article).toHaveProperty("author");
         expect(typeof article).toBe("object");
