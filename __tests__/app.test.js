@@ -3,6 +3,8 @@ const app = require("../app.js");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection.js");
 const data = require("../db/data/test-data");
+const fs = require("mz/fs");
+
 // const jwt = require("jsonwebtoken");
 
 // require("dotenv").config({
@@ -58,6 +60,18 @@ xdescribe("GET /api/users", () => {
           expect(typeof user.avatar_url).toBe("string");
         });
       });
+  });
+});
+
+describe("POST /api/users/article/uploadImage", () => {
+  it("should reponds 201 status code and file uploaded", () => {
+    const newPath = `${__dirname}/home.png`;
+
+    return request(app)
+      .post("/api/users/article/uploadImage")
+      .attach("article_img_url", newPath)
+      .expect(201)
+      .then(({ body }) => console.log(body));
   });
 });
 

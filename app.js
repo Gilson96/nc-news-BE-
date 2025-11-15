@@ -36,7 +36,11 @@ app.get("/api/topics", getAllTopics);
 
 app.get("/api/users", getAllUsers);
 app.post("/api/users/article", createArticle);
-app.post("/api/users/article/uploadImage", upload.single('article_image'),uploadImage);
+app.post(
+  "/api/users/article/uploadImage",
+  upload.single("article_img_url"),
+  uploadImage
+);
 app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);

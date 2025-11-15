@@ -7,7 +7,10 @@ exports.getAllUsers = (req, res) => {
 };
 
 exports.uploadImage = (req, res) => {
-  console.log(req.file, req.body);
+  console.log(req.file);
+  return res
+    .status(201)
+    .json({ message: "File uploaded successfully", file: req.file });
 };
 
 exports.createArticle = (req, res) => {
