@@ -6,11 +6,15 @@ exports.getAllUsers = (req, res) => {
   });
 };
 
+exports.uploadImage = (req, res) => {
+  console.log(req.file, req.body);
+};
+
 exports.createArticle = (req, res) => {
   const { title } = req.body;
   const { topic } = req.body;
   const { author } = req.body;
-  const { article_img_url } = req.body;
+  const { article_img_url } = req.file;
 
   const fields = Object.keys(req.body);
 

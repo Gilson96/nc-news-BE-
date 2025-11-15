@@ -1,9 +1,15 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 const { getAllTopics } = require("./controllers/topics");
-const { getAllUsers, createArticle } = require("./controllers/users");
+const {
+  getAllUsers,
+  createArticle,
+  uploadImage,
+} = require("./controllers/users");
 const {
   getAllArticles,
   getArticleById,
@@ -30,7 +36,7 @@ app.get("/api/topics", getAllTopics);
 
 app.get("/api/users", getAllUsers);
 app.post("/api/users/article", createArticle);
-
+app.post("/api/users/article/uploadImage", upload.single('article_image'),uploadImage);
 app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
