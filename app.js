@@ -38,7 +38,7 @@ app.get("/api/users", getAllUsers);
 app.post("/api/users/article", createArticle);
 app.post(
   "/api/users/article/uploadImage",
-  // upload.single("article_img_url"),
+  upload.single("article_img_url"),
   uploadImage
 );
 app.get("/api/articles", getAllArticles);
