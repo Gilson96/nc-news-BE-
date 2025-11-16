@@ -8,11 +8,11 @@ exports.users = () => {
     });
 };
 
-exports.create = (title, topic, author, article_img_url) => {
+exports.create = (title, topic, author) => {
   return db
     .query(
-      `INSERT INTO articles (title, topic, author, article_img_url) VALUES ($1, $2, $3, $4) RETURNING *;`,
-      [title, topic, author, article_img_url]
+      `INSERT INTO articles (title, topic, author) VALUES ($1, $2, $3) RETURNING *;`,
+      [title, topic, author]
     )
     .then(({ rows }) => {
       return rows;

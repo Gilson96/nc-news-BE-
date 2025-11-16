@@ -68,69 +68,65 @@ describe("GET /api/users", () => {
 //   });
 // });
 
-// describe("POST /api/users/article", () => {
-//   it.only("should responds with a 201 status code and an object containing created article", () => {
-//     const newArticle = {
-//       title: "New article",
-//       topic: "mitch",
-//       author: "butter_bridge",
-//       article_img_url: "",
-//     };
-//     return request(app)
-//       .post("/api/users/article")
-//       .send(newArticle)
-//       .expect(201)
-//       .then(({ body }) => {
-//         const { article } = body;
-//         console.log(article);
-//         expect(article).toHaveProperty("article_id");
-//         expect(article).toHaveProperty("title");
-//         expect(article).toHaveProperty("topic");
-//         expect(article).toHaveProperty("author");
-//         expect(article).toHaveProperty("created_at");
-//         expect(article).toHaveProperty("votes");
-//         expect(article).toHaveProperty("article_img_url");
-//         expect(typeof article).toBe("object");
-//         expect(typeof article.article_id).toBe("number");
-//         expect(typeof article.title).toBe("string");
-//         expect(typeof article.topic).toBe("string");
-//         expect(typeof article.author).toBe("string");
-//         expect(typeof article.created_at).toBe("string");
-//         expect(typeof article.votes).toBe("number");
-//         expect(typeof article.article_img_url).toBe("string");
-//       });
-//   });
-//   it.only("should respond with a 400 status code when attempting to POST with incorrect fields", () => {
-//     const newArticle = {
-//       name: "New article",
-//       topic: "mitch",
-//       author: "butter_bridge",
-//       article_img_url: "",
-//     };
-//     return request(app)
-//       .post(`/api/users/article`)
-//       .send(newArticle)
-//       .expect(400)
-//       .then(({ body }) => {
-//         expect(body.msg).toBe("Invalid field");
-//       });
-//   });
-//   it.only("should respond with a 400 status code when attempting to POST with valid fields but the value of a field is invalid", () => {
-//     const newArticle = {
-//       title: 1,
-//       topic: "mitch",
-//       author: "butter_bridge",
-//       article_img_url: "",
-//     };
-//     return request(app)
-//       .post("/api/users/article")
-//       .send(newArticle)
-//       .expect(400)
-//       .then(({ body }) => {
-//         expect(body.msg).toBe("Invalid value");
-//       });
-//   });
-// });
+describe("POST /api/users/article", () => {
+  it.only("should responds with a 201 status code and an object containing created article", () => {
+    const newArticle = {
+      title: "New article",
+      topic: "mitch",
+      author: "butter_bridge",
+    };
+    return request(app)
+      .post("/api/users/article")
+      .send(newArticle)
+      .expect(201)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toHaveProperty("article_id");
+        expect(article).toHaveProperty("title");
+        expect(article).toHaveProperty("topic");
+        expect(article).toHaveProperty("author");
+        expect(article).toHaveProperty("created_at");
+        expect(article).toHaveProperty("votes");
+        expect(typeof article).toBe("object");
+        expect(typeof article.article_id).toBe("number");
+        expect(typeof article.title).toBe("string");
+        expect(typeof article.topic).toBe("string");
+        expect(typeof article.author).toBe("string");
+        expect(typeof article.created_at).toBe("string");
+        expect(typeof article.votes).toBe("number");
+      });
+  });
+  it.only("should respond with a 400 status code when attempting to POST with incorrect fields", () => {
+    const newArticle = {
+      name: "New article",
+      topic: "mitch",
+      author: "butter_bridge",
+      article_img_url: "",
+    };
+    return request(app)
+      .post(`/api/users/article`)
+      .send(newArticle)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid field");
+      });
+  });
+  it.only("should respond with a 400 status code when attempting to POST with valid fields but the value of a field is invalid", () => {
+    const newArticle = {
+      title: 1,
+      topic: "mitch",
+      author: "butter_bridge",
+      article_img_url: "",
+    };
+    return request(app)
+      .post("/api/users/article")
+      .send(newArticle)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid value");
+      });
+  });
+});
 
 describe("GET /api/articles", () => {
   it("should responds with a 200 status code and an array containing all articles", () => {
