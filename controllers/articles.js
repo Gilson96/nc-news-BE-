@@ -35,7 +35,6 @@ exports.editArticle = (req, res) => {
     if (article.length === 0) {
       return res.status(404).send({ msg: `No results ` });
     } else {
-      console.log(article);
       return res.status(201).send({ article: article[0] });
     }
   });

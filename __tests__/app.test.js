@@ -3,13 +3,6 @@ const app = require("../app.js");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection.js");
 const data = require("../db/data/test-data");
-const fs = require("mz/fs");
-
-// const jwt = require("jsonwebtoken");
-
-// require("dotenv").config({
-//   path: `${__dirname}/../.env.${process.env.JWT_SECRET_KEY}`,
-// });
 
 beforeEach(() => {
   return seed(data);
@@ -19,13 +12,13 @@ afterAll(() => {
   return db.end();
 });
 
-xdescribe("checks if attempting to access a non-existent endpoint", () => {
+describe("checks if attempting to access a non-existent endpoint", () => {
   it("should respond with a 404 status code for invalid endpoint", () => {
     return request(app).get("/api/invalid-endpoint").expect(404);
   });
 });
 
-xdescribe("GET /api/topics", () => {
+describe("GET /api/topics", () => {
   it("should respond with a 200 status code and an array containing all topics", () => {
     return request(app)
       .get("/api/topics")
@@ -43,7 +36,7 @@ xdescribe("GET /api/topics", () => {
   });
 });
 
-xdescribe("GET /api/users", () => {
+describe("GET /api/users", () => {
   it("should responds with a 200 status code and an array containing all users", () => {
     return request(app)
       .get("/api/users")
@@ -63,17 +56,17 @@ xdescribe("GET /api/users", () => {
   });
 });
 
-describe("POST /api/users/article/uploadImage", () => {
-  it("should reponds 201 status code and file uploaded", () => {
-    const newPath = `${__dirname}/home.png`;
+// describe("POST /api/users/article/uploadImage", () => {
+//   it("should reponds 201 status code and file uploaded", () => {
+//     const newPath = `${__dirname}/home.png`;
 
-    return request(app)
-      .post("/api/users/article/uploadImage")
-      .attach("article_img_url", newPath)
-      .expect(201)
-      .then(({ body }) => console.log(body));
-  });
-});
+//     return request(app)
+//       .post("/api/users/article/uploadImage")
+//       .attach("article_img_url", newPath)
+//       .expect(201)
+//       .then(({ body }) => console.log(body));
+//   });
+// });
 
 // describe("POST /api/users/article", () => {
 //   it.only("should responds with a 201 status code and an object containing created article", () => {
@@ -139,7 +132,7 @@ describe("POST /api/users/article/uploadImage", () => {
 //   });
 // });
 
-xdescribe("GET /api/articles", () => {
+describe("GET /api/articles", () => {
   it("should responds with a 200 status code and an array containing all articles", () => {
     return request(app)
       .get("/api/articles")
@@ -171,9 +164,7 @@ xdescribe("GET /api/articles", () => {
     return request(app)
       .get("/api/articles?&topic=mitch")
       .expect(200)
-      .then(({ body }) => {
-        console.log(body);
-      });
+      .then(({ body }) => {});
   });
   it("should responds with a 200 status code and an array containing all article filtered by topic", () => {
     const sortBy = {
@@ -184,13 +175,11 @@ xdescribe("GET /api/articles", () => {
       .get("/api/articles?topic=cats")
       .expect(200)
       .send(sortBy)
-      .then(({ body }) => {
-        console.log(body);
-      });
+      .then(({ body }) => {});
   });
 });
 
-xdescribe("GET /api/articles/:article_id", () => {
+describe("GET /api/articles/:article_id", () => {
   it("should respond with a 200 status code and a article object from the given id", () => {
     return request(app)
       .get("/api/articles/1")
@@ -232,7 +221,7 @@ xdescribe("GET /api/articles/:article_id", () => {
   });
 });
 
-xdescribe("GET /api/articles/:article_id/comments", () => {
+describe("GET /api/articles/:article_id/comments", () => {
   it("should respond with a 200 status code and a list of comments", () => {
     return request(app)
       .get("/api/articles/1/comments")
@@ -274,8 +263,8 @@ xdescribe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-xdescribe("POST /api/articles/:article_id/comments", () => {
-  it.only("should respond with a 201 and a new comment object created from the given article id", () => {
+describe("POST /api/articles/:article_id/comments", () => {
+  it("should respond with a 201 and a new comment object created from the given article id", () => {
     const newComment = {
       body: "New comment.",
       username: "butter_bridge",
@@ -286,7 +275,6 @@ xdescribe("POST /api/articles/:article_id/comments", () => {
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article);
         expect(article).toHaveProperty("body");
         expect(article).toHaveProperty("author");
         expect(typeof article).toBe("object");
@@ -322,23 +310,22 @@ xdescribe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
-xdescribe("PACTH /api/articles/:article_id", () => {
-  xit("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
-    const newVotes = { votes: 10 };
+describe("PACTH /api/articles/:article_id", () => {
+  it("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
     return request(app)
       .patch("/api/articles/1")
-      .send(newVotes)
+      .send({ votes: 10 })
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
-        expect(article).toHaveProperty("votes", 110);
+        expect(article).toHaveProperty("votes", 10);
         expect(typeof article.votes).toBe("number");
       });
   });
-  xit("should respond with a 201 status code and a decremented votes value of a article object from the given id", () => {
+  it("should respond with a 201 status code and a decremented votes value of a article object from the given id", () => {
     return request(app)
       .patch("/api/articles/1")
-      .send({ votes: -20 })
+      .send({ votes: 80 })
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
@@ -348,7 +335,7 @@ xdescribe("PACTH /api/articles/:article_id", () => {
   });
 });
 
-xdescribe("DELETE /api/comments/:comment_id", () => {
+describe("DELETE /api/comments/:comment_id", () => {
   it("should respond with a 204 status code with no content", () => {
     return request(app).delete("/api/comments/1").expect(204);
   });

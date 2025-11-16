@@ -1,57 +1,27 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
 
-const { getAllTopics } = require("./controllers/topics");
-const {
-  getAllUsers,
-  createArticle,
-  uploadImage,
-} = require("./controllers/users");
-const {
-  getAllArticles,
-  getArticleById,
-  editArticle,
-  addArticles,
-  createComment,
-} = require("./controllers/articles");
-const {
-  getCommentsByArticleId,
-  deleteComment,
-} = require("./controllers/comments");
+app.use(cors());
+app.use(express.json());
+
+const apiRouter = require("express").Router();
+
+const usersRouter = require("./routes/users");
+const topicsRouter = require("./routes/topics");
+const commentsRouter = require("./routes/comments");
+const articlesRouter = require("./routes/articles");
 const {
   handlePsqlError,
   handleCustomError,
   handleSeverError,
 } = require("./controllers/erros.controllers");
 
-app.use(cors());
-app.use(express.json());
-
-app.use("/api", express.static("public"));
-
-app.get("/api/topics", getAllTopics);
-
-app.get("/api/users", getAllUsers);
-app.post("/api/users/article", createArticle);
-app.post(
-  "/api/users/article/uploadImage",
-  upload.single("article_img_url"),
-  uploadImage
-);
-app.get("/api/articles", getAllArticles);
-
-app.get("/api/articles/:article_id", getArticleById);
-
-app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
-
-app.post("/api/articles/:article_id/comments", createComment);
-
-app.patch("/api/articles/:article_id", editArticle);
-
-app.delete("/api/comments/:comment_id", deleteComment);
+app.use("/api", apiRouter);
+apiRouter.use("/users", usersRouter);
+apiRouter.use("/topics", topicsRouter);
+apiRouter.use("/comments", commentsRouter);
+apiRouter.use("/articles", articlesRouter);
 
 app.use(handlePsqlError);
 app.use(handleCustomError);
