@@ -56,17 +56,17 @@ describe("GET /api/users", () => {
   });
 });
 
-// describe("POST /api/users/article/uploadImage", () => {
-//   it("should reponds 201 status code and file uploaded", () => {
-//     const newPath = `${__dirname}/home.png`;
+describe("POST /api/users/article/uploadImage", () => {
+  it.only("should reponds 201 status code and file uploaded", () => {
+    const newPath = `${__dirname}/home.png`;
 
-//     return request(app)
-//       .post("/api/users/article/uploadImage")
-//       .attach("article_img_url", newPath)
-//       .expect(201)
-//       .then(({ body }) => console.log(body));
-//   });
-// });
+    return request(app)
+      .post("/api/users/article/uploadImage")
+      .attach("article_img_url", newPath)
+      .expect(201)
+      .then(({ body }) => console.log(body));
+  });
+});
 
 describe("POST /api/users/article", () => {
   it.only("should responds with a 201 status code and an object containing created article", () => {
