@@ -18,6 +18,27 @@ describe("checks if attempting to access a non-existent endpoint", () => {
   });
 });
 
+describe("POST /api/topics", () => {
+  it.only("should respond with a 201 status code new topic object", () => {
+    const newTopic = {
+      slug: "Dancing",
+      description: "I'm dancing",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(newTopic)
+      .expect(201)
+      .then(({ body }) => {
+        const { topic } = body;
+        expect(topic).toHaveProperty("slug");
+        expect(topic).toHaveProperty("description");
+        expect(typeof topic).toBe("object");
+        expect(typeof topic.slug).toBe("string");
+        expect(typeof topic.description).toBe("string");
+      });
+  });
+});
+
 describe("GET /api/topics", () => {
   it("should respond with a 200 status code and an array containing all topics", () => {
     return request(app)
