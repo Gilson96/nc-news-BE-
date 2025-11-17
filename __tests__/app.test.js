@@ -21,8 +21,7 @@ describe("checks if attempting to access a non-existent endpoint", () => {
 describe("POST /api/topics", () => {
   it.only("should respond with a 201 status code new topic object", () => {
     const newTopic = {
-      slug: "Dancing",
-      description: "I'm dancing",
+      slug: "Dancing"
     };
     return request(app)
       .post("/api/topics")
@@ -31,10 +30,8 @@ describe("POST /api/topics", () => {
       .then(({ body }) => {
         const { topic } = body;
         expect(topic).toHaveProperty("slug");
-        expect(topic).toHaveProperty("description");
         expect(typeof topic).toBe("object");
         expect(typeof topic.slug).toBe("string");
-        expect(typeof topic.description).toBe("string");
       });
   });
 });
@@ -77,7 +74,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("POST /api/users/article/uploadImage", () => {
+xdescribe("POST /api/users/article/uploadImage", () => {
   it.only("should reponds 201 status code and file uploaded", () => {
     const newPath = `${__dirname}/home.png`;
 

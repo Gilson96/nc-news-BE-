@@ -8,16 +8,15 @@ exports.getAllTopics = (req, res) => {
 
 exports.createTopics = (req, res) => {
   const { slug } = req.body;
-  const { description } = req.body;
 
-  if (slug === undefined || description === undefined) {
+  if (slug === undefined) {
     return res.status(400).send({ msg: "Invalid field" });
   }
 
-  if (typeof slug !== "string" || typeof description !== "string") {
+  if (typeof slug !== "string") {
     return res.status(400).send({ msg: "Invalid value" });
   }
-  return create(slug, description).then((topic) => {
+  return create(slug).then((topic) => {
     return res.status(201).send({ topic: topic[0] });
   });
 };

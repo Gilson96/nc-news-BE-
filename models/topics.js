@@ -8,12 +8,9 @@ exports.topics = () => {
     });
 };
 
-exports.create = (slug, description) => {
+exports.create = (slug) => {
   return db
-    .query(
-      "INSERT INTO topics (slug, description) VALUES ($1,$2) RETURNING*;",
-      [slug, description]
-    )
+    .query("INSERT INTO topics (slug) VALUES ($1) RETURNING*;", [slug])
     .then(({ rows }) => {
       return rows;
     });
