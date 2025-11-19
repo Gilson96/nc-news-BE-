@@ -19,9 +19,9 @@ describe("checks if attempting to access a non-existent endpoint", () => {
 });
 
 describe("POST /api/topics", () => {
-  it.only("should respond with a 201 status code new topic object", () => {
+  it("should respond with a 201 status code new topic object", () => {
     const newTopic = {
-      slug: "Dancing"
+      slug: "Dancing",
     };
     return request(app)
       .post("/api/topics")
@@ -32,6 +32,18 @@ describe("POST /api/topics", () => {
         expect(topic).toHaveProperty("slug");
         expect(typeof topic).toBe("object");
         expect(typeof topic.slug).toBe("string");
+      });
+  });
+  it.only("should respond with a 400 status code if the topic slug already exists", () => {
+    const newTopic = {
+      slug: "cats",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(newTopic)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("This topic already exists");
       });
   });
 });
