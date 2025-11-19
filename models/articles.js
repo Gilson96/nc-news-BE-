@@ -1,7 +1,7 @@
 const db = require("../db/connection");
 const format = require("pg-format");
 
-exports.articles = (sort_by = 'created_at', order = 'DESC', topic) => {
+exports.articles = (sort_by = "created_at", order = "DESC", topic) => {
   const articlesFormat = format(
     `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id ${
       topic !== undefined ? `WHERE topic ILIKE '%${topic}%'` : ""
@@ -40,6 +40,16 @@ exports.comment = (article_id, body, author) => {
       `INSERT INTO comments (article_id, body, author) VALUES($1, $2, $3)  RETURNING *;`,
       [article_id, body, author]
     )
+    .then(({ rows }) => {
+      return rows;
+    });
+};
+
+exports.deleteId = (article_id) => {
+  return db
+    .query(`DELETE FROM articles WHERE article_id = $1 RETURNING *;`, [
+      article_id,
+    ])
     .then(({ rows }) => {
       return rows;
     });

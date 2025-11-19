@@ -3,7 +3,9 @@ const {
   articlesById,
   articleEdit,
   comment,
+  deleteId,
 } = require("../models/articles");
+const { checkIfExists } = require("../models/checkIfExists");
 
 exports.getAllArticles = (req, res) => {
   const { sort_by } = req.query;
@@ -37,6 +39,31 @@ exports.editArticle = (req, res) => {
       return res.status(201).send({ article: article[0] });
     }
   });
+};
+
+exports.deleteArticle = (req, res) => {
+  const article_id = req.params.article_id;
+  const convertedArticle_id = Number(article_id);
+
+  if (article_id === undefined) {
+    return res.status(400).send({ msg: "Invalid id" });
+  }
+
+  if (typeof convertedArticle_id !== "number") {
+    return res.status(400).send({ msg: "Bad request" });
+  }
+
+  return checkIfExists("articles", "article_id", article_id).then(
+    (response) => {
+      if (!response) {
+        return res.status(404).send({ msg: "Cannot find article" });
+      } else {
+        return deleteId(article_id).then(() => {
+          return res.status(204).send();
+        });
+      }
+    }
+  );
 };
 
 exports.createComment = (req, res) => {

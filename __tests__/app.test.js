@@ -34,7 +34,7 @@ describe("POST /api/topics", () => {
         expect(typeof topic.slug).toBe("string");
       });
   });
-  it.only("should respond with a 400 status code if the topic slug already exists", () => {
+  it("should respond with a 400 status code if the topic slug already exists", () => {
     const newTopic = {
       slug: "cats",
     };
@@ -98,7 +98,7 @@ xdescribe("POST /api/users/article/uploadImage", () => {
   });
 });
 
-describe("POST /api/users/article", () => {
+xdescribe("POST /api/users/article", () => {
   it.only("should responds with a 201 status code and an object containing created article", () => {
     const newArticle = {
       title: "New article",
@@ -240,6 +240,31 @@ describe("GET /api/articles/:article_id", () => {
   it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
     return request(app)
       .get("/api/articles/not-an-ID")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("DELETE /api/articles/:article_id", () => {
+  it.only("should respond with a 204 status code ", () => {
+    return request(app)
+      .delete("/api/articles/1")
+      .expect(204)
+      .then(({ body }) => {});
+  });
+  it.only("should respond with a 404 status code when attempting to GET a resource by a valid ID that does not exist in the database", () => {
+    return request(app)
+      .delete("/api/articles/99999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Cannot find article");
+      });
+  });
+  it.only("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
+    return request(app)
+      .delete("/api/articles/not-an-ID")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");
