@@ -4,6 +4,7 @@ const {
   articleEdit,
   comment,
   deleteId,
+  update,
 } = require("../models/articles");
 const { checkIfExists } = require("../models/checkIfExists");
 
@@ -31,12 +32,16 @@ exports.getArticleById = (req, res) => {
 
 exports.editArticle = (req, res) => {
   const article_id = req.params.article_id;
+  const { title } = req.body;
+  const { votes } = req.body;
 
-  return articleEdit(article_id, req.body.votes).then((article) => {
-    if (article.length === 0) {
-      return res.status(404).send({ msg: `No results ` });
+  return checkIfExists("articles", "article_id", article_id).then((result) => {
+    if (!result) {
+      return res.status(404).send({ msg: "Somenthing went wrong!" });
     } else {
-      return res.status(201).send({ article: article[0] });
+      return update(title, votes, article_id).then((article) => {
+        return res.status(201).send({ article: article[0] });
+      });
     }
   });
 };

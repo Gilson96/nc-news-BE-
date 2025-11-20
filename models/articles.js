@@ -23,11 +23,14 @@ exports.articlesById = (article_id) => {
     });
 };
 
-exports.articleEdit = (article_id, votes) => {
+exports.update = (title, votes, article_id) => {
   return db
     .query(
-      "UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING *;",
-      [votes, article_id]
+      `UPDATE articles
+      SET title = COALESCE($1, title),
+      votes = COALESCE($2, votes)
+      WHERE article_id = $3 RETURNING *;`,
+      [title, votes, article_id]
     )
     .then(({ rows }) => {
       return rows;

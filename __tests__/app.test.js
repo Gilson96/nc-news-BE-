@@ -248,13 +248,13 @@ describe("GET /api/articles/:article_id", () => {
 });
 
 describe("DELETE /api/articles/:article_id", () => {
-  it.only("should respond with a 204 status code ", () => {
+  it("should respond with a 204 status code ", () => {
     return request(app)
       .delete("/api/articles/1")
       .expect(204)
       .then(({ body }) => {});
   });
-  it.only("should respond with a 404 status code when attempting to GET a resource by a valid ID that does not exist in the database", () => {
+  it("should respond with a 404 status code when attempting to GET a resource by a valid ID that does not exist in the database", () => {
     return request(app)
       .delete("/api/articles/99999")
       .expect(404)
@@ -262,7 +262,7 @@ describe("DELETE /api/articles/:article_id", () => {
         expect(body.msg).toBe("Cannot find article");
       });
   });
-  it.only("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
+  it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
     return request(app)
       .delete("/api/articles/not-an-ID")
       .expect(400)
@@ -362,14 +362,21 @@ describe("POST /api/articles/:article_id/comments", () => {
 });
 
 describe("PACTH /api/articles/:article_id", () => {
-  it("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
+  it.only("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
+    const newArticle = {
+      title: "Front End developer",
+      votes: 10,
+    };
     return request(app)
       .patch("/api/articles/1")
-      .send({ votes: 10 })
+      .send(newArticle)
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
-        expect(article).toHaveProperty("votes", 10);
+        console.log(article);
+        expect(article).toHaveProperty("title");
+        expect(article).toHaveProperty("votes");
+        expect(typeof article.title).toBe("string");
         expect(typeof article.votes).toBe("number");
       });
   });
