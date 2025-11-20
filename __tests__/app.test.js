@@ -49,7 +49,7 @@ describe("POST /api/topics", () => {
 });
 
 describe("GET /api/topics", () => {
-  it("should respond with a 200 status code and an array containing all topics", () => {
+  it.only("should respond with a 200 status code and an array containing all topics", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
@@ -67,7 +67,7 @@ describe("GET /api/topics", () => {
 });
 
 describe("DELETE /api/topics/:slug", () => {
-  it.only("should respond with a 204 status code ", () => {
+  it("should respond with a 204 status code ", () => {
     return request(app)
       .delete("/api/topics/cats")
       .expect(204)

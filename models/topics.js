@@ -2,8 +2,11 @@ const db = require("../db/connection");
 
 exports.topics = () => {
   return db
-    .query("SELECT topics.slug, topics.description FROM topics;")
+    .query(
+      "SELECT topics.slug, topics.description, COUNT(article_id) FROM topics LEFT JOIN articles on articles.topic = topics.slug GROUP BY topics.slug;"
+    )
     .then(({ rows }) => {
+      console.log(rows)
       return rows;
     });
 };
