@@ -435,3 +435,35 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("PACTH /api/comments/:comment_id", () => {
+  it.only("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
+    const newComment = {
+      body: "Front End developer",
+      votes: 10,
+    };
+    return request(app)
+      .patch("/api/comments/1")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        console.log(comment);
+        expect(comment).toHaveProperty("body");
+        expect(comment).toHaveProperty("votes");
+        expect(typeof comment.body).toBe("string");
+        expect(typeof comment.votes).toBe("number");
+      });
+  });
+  xit("should respond with a 201 status code and a decremented votes value of a article object from the given id", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ votes: 80 })
+      .expect(201)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toHaveProperty("votes", 80);
+        expect(typeof article.votes).toBe("number");
+      });
+  });
+});

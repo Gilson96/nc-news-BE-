@@ -1,7 +1,9 @@
+const { checkIfExists } = require("../models/checkIfExists");
 const {
   commentsByArticleId,
   deleteCommentsById,
   create,
+  update,
 } = require("../models/comments");
 
 exports.getCommentsByArticleId = (req, res) => {
@@ -12,6 +14,26 @@ exports.getCommentsByArticleId = (req, res) => {
       return res.status(404).send({ msg: `No results` });
     } else {
       return res.status(200).send(comment);
+    }
+  });
+};
+
+exports.updateComment = (req, res) => {
+  const comment_id = req.params.comment_id;
+  const { body } = req.body;
+  const { votes } = req.body;
+
+  if (votes === undefined || body === undefined) {
+    return res.status(400).send({ msg: "Invalid values" });
+  }
+
+  return checkIfExists("comments", "comment_id", comment_id).then((result) => {
+    if (!result) {
+      return res.status(404).send({ msg: "Comment do not exists!" });
+    } else {
+      return update(body, votes, comment_id).then((comment) => {
+        return res.status(201).send({ comment: comment[0] });
+      });
     }
   });
 };
