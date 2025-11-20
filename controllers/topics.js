@@ -41,7 +41,7 @@ exports.deleteTopics = (req, res) => {
     if (!response) {
       return res.status(400).send({ msg: "This topic do not exists" });
     } else {
-      return deleteId().then((topic) => {
+      return deleteId(slug).then(() => {
         return res.status(204).send();
       });
     }
