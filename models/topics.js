@@ -15,3 +15,11 @@ exports.create = (slug) => {
       return rows;
     });
 };
+
+exports.deleteId = (slug) => {
+  return db
+    .query(`DELETE FROM topics WHERE topics.slug = $1 RETURNING *;`, [slug])
+    .then(({ rows }) => {
+      return rows;
+    });
+};

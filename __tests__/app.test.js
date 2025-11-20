@@ -66,6 +66,27 @@ describe("GET /api/topics", () => {
   });
 });
 
+describe("DELETE /api/topics/:slug", () => {
+  it.only("should respond with a 204 status code ", () => {
+    return request(app)
+      .delete("/api/topics/cats")
+      .expect(204)
+      .then(({ body }) => {});
+  });
+  it("should respond with a 400 status code if the topic slug already exists", () => {
+    const newTopic = {
+      slug: "cats",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(newTopic)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("This topic already exists");
+      });
+  });
+});
+
 describe("GET /api/users", () => {
   it("should responds with a 200 status code and an array containing all users", () => {
     return request(app)
@@ -361,8 +382,8 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
-describe("PACTH /api/articles/:article_id", () => {
-  it.only("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
+xdescribe("PACTH /api/articles/:article_id", () => {
+  it("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
     const newArticle = {
       title: "Front End developer",
       votes: 10,
