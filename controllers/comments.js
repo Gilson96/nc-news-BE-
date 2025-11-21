@@ -23,10 +23,6 @@ exports.updateComment = (req, res) => {
   const { body } = req.body;
   const { votes } = req.body;
 
-  if (votes === undefined || body === undefined) {
-    return res.status(400).send({ msg: "Invalid values" });
-  }
-
   return checkIfExists("comments", "comment_id", comment_id).then((result) => {
     if (!result) {
       return res.status(404).send({ msg: "Comment do not exists!" });
