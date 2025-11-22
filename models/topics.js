@@ -20,7 +20,7 @@ exports.create = (slug) => {
 
 exports.deleteId = (slug) => {
   return db
-    .query(`DELETE FROM topics WHERE topics.count = $1 RETURNING *;`, [slug])
+    .query(`DELETE FROM topics WHERE topics.slug = $1 RETURNING *;`, [slug])
     .then(({ rows }) => {
       return rows;
     });
