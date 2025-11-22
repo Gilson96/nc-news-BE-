@@ -18,9 +18,9 @@ exports.create = (slug) => {
     });
 };
 
-exports.deleteId = () => {
+exports.deleteId = (slug) => {
   return db
-    .query(`DELETE FROM topics WHERE topics.count = $1 RETURNING *;`)
+    .query(`DELETE FROM topics WHERE topics.count = $1 RETURNING *;`, [slug])
     .then(({ rows }) => {
       return rows;
     });
