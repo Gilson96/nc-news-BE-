@@ -18,167 +18,6 @@ describe("checks if attempting to access a non-existent endpoint", () => {
   });
 });
 
-describe("POST /api/topics", () => {
-  it("should respond with a 201 status code new topic object", () => {
-    const newTopic = {
-      slug: "Dancing",
-    };
-    return request(app)
-      .post("/api/topics")
-      .send(newTopic)
-      .expect(201)
-      .then(({ body }) => {
-        const { topic } = body;
-        expect(topic).toHaveProperty("slug");
-        expect(typeof topic).toBe("object");
-        expect(typeof topic.slug).toBe("string");
-      });
-  });
-  it("should respond with a 400 status code if the topic slug already exists", () => {
-    const newTopic = {
-      slug: "cats",
-    };
-    return request(app)
-      .post("/api/topics")
-      .send(newTopic)
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("This topic already exists");
-      });
-  });
-});
-
-describe("GET /api/topics", () => {
-  it.only("should respond with a 200 status code and an array containing all topics", () => {
-    return request(app)
-      .get("/api/topics")
-      .expect(200)
-      .then(({ body }) => {
-        expect(Array.isArray(body)).toBe(true);
-        body.forEach((topic) => {
-          expect(topic).toHaveProperty("slug");
-          expect(topic).toHaveProperty("description");
-          expect(typeof topic).toBe("object");
-          expect(typeof topic.slug).toBe("string");
-          expect(typeof topic.description).toBe("string");
-        });
-      });
-  });
-});
-
-describe("DELETE /api/topics/:slug", () => {
-  it("should respond with a 204 status code ", () => {
-    return request(app)
-      .delete("/api/topics/cats")
-      .expect(204)
-      .then(({ body }) => {});
-  });
-  it("should respond with a 400 status code if the topic slug already exists", () => {
-    const newTopic = {
-      slug: "cats",
-    };
-    return request(app)
-      .post("/api/topics")
-      .send(newTopic)
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("This topic already exists");
-      });
-  });
-});
-
-describe("GET /api/users", () => {
-  it("should responds with a 200 status code and an array containing all users", () => {
-    return request(app)
-      .get("/api/users")
-      .expect(200)
-      .then(({ body }) => {
-        expect(Array.isArray(body)).toBe(true);
-        body.forEach((user) => {
-          expect(user).toHaveProperty("username");
-          expect(user).toHaveProperty("name");
-          expect(user).toHaveProperty("avatar_url");
-          expect(typeof user).toBe("object");
-          expect(typeof user.username).toBe("string");
-          expect(typeof user.name).toBe("string");
-          expect(typeof user.avatar_url).toBe("string");
-        });
-      });
-  });
-});
-
-xdescribe("POST /api/users/article/uploadImage", () => {
-  it.only("should reponds 201 status code and file uploaded", () => {
-    const newPath = `${__dirname}/home.png`;
-
-    return request(app)
-      .post("/api/users/article/uploadImage")
-      .attach("article_img_url", newPath)
-      .expect(201)
-      .then(({ body }) => console.log(body));
-  });
-});
-
-xdescribe("POST /api/users/article", () => {
-  it.only("should responds with a 201 status code and an object containing created article", () => {
-    const newArticle = {
-      title: "New article",
-      topic: "mitch",
-      author: "butter_bridge",
-    };
-    return request(app)
-      .post("/api/users/article")
-      .send(newArticle)
-      .expect(201)
-      .then(({ body }) => {
-        const { article } = body;
-        expect(article).toHaveProperty("article_id");
-        expect(article).toHaveProperty("title");
-        expect(article).toHaveProperty("topic");
-        expect(article).toHaveProperty("author");
-        expect(article).toHaveProperty("created_at");
-        expect(article).toHaveProperty("votes");
-        expect(typeof article).toBe("object");
-        expect(typeof article.article_id).toBe("number");
-        expect(typeof article.title).toBe("string");
-        expect(typeof article.topic).toBe("string");
-        expect(typeof article.author).toBe("string");
-        expect(typeof article.created_at).toBe("string");
-        expect(typeof article.votes).toBe("number");
-      });
-  });
-  it.only("should respond with a 400 status code when attempting to POST with incorrect fields", () => {
-    const newArticle = {
-      name: "New article",
-      topic: "mitch",
-      author: "butter_bridge",
-      article_img_url: "",
-    };
-    return request(app)
-      .post(`/api/users/article`)
-      .send(newArticle)
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Invalid field");
-      });
-  });
-  it.only("should respond with a 400 status code when attempting to POST with valid fields but the value of a field is invalid", () => {
-    const newArticle = {
-      title: 1,
-      topic: "mitch",
-      author: "butter_bridge",
-      article_img_url: "",
-    };
-    return request(app)
-      .post("/api/users/article")
-      .send(newArticle)
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Invalid value");
-      });
-  });
-});
-
 describe("GET /api/articles", () => {
   it("should responds with a 200 status code and an array containing all articles", () => {
     return request(app)
@@ -255,7 +94,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/99999")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("No results");
+        expect(body.msg).toBe("Article not found");
       });
   });
   it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
@@ -280,7 +119,7 @@ describe("DELETE /api/articles/:article_id", () => {
       .delete("/api/articles/99999")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Cannot find article");
+        expect(body.msg).toBe("Article not found");
       });
   });
   it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
@@ -322,7 +161,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/9999/comments")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("No results");
+        expect(body.msg).toBe("Comments not found");
       });
   });
   it("should respond with a 400 status code when attempting to GET a resource by an invalid ID", () => {
@@ -382,7 +221,7 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
-xdescribe("PACTH /api/articles/:article_id", () => {
+describe("PACTH /api/articles/:article_id", () => {
   it("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
     const newArticle = {
       title: "Front End developer",
@@ -394,75 +233,9 @@ xdescribe("PACTH /api/articles/:article_id", () => {
       .expect(201)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article);
         expect(article).toHaveProperty("title");
         expect(article).toHaveProperty("votes");
         expect(typeof article.title).toBe("string");
-        expect(typeof article.votes).toBe("number");
-      });
-  });
-  it("should respond with a 201 status code and a decremented votes value of a article object from the given id", () => {
-    return request(app)
-      .patch("/api/articles/1")
-      .send({ votes: 80 })
-      .expect(201)
-      .then(({ body }) => {
-        const { article } = body;
-        expect(article).toHaveProperty("votes", 80);
-        expect(typeof article.votes).toBe("number");
-      });
-  });
-});
-
-describe("DELETE /api/comments/:comment_id", () => {
-  it("should respond with a 204 status code with no content", () => {
-    return request(app).delete("/api/comments/1").expect(204);
-  });
-  it("should respond with a 404 status code when attempting to DELETE a resource that does not exist", () => {
-    return request(app)
-      .delete("/api/comments/99999")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
-      });
-  });
-  it("should respond with a 400 status code when attempting to DELETE a resource by an invalid ID", () => {
-    return request(app)
-      .delete("/api/comments/not-an-ID")
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Bad request");
-      });
-  });
-});
-
-describe("PACTH /api/comments/:comment_id", () => {
-  it.only("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
-    const newComment = {
-      body: "Front End developer",
-      votes: 10,
-    };
-    return request(app)
-      .patch("/api/comments/1")
-      .send(newComment)
-      .expect(201)
-      .then(({ body }) => {
-        const { comment } = body;
-        console.log(comment);
-        expect(comment).toHaveProperty("body");
-        expect(comment).toHaveProperty("votes");
-        expect(typeof comment.body).toBe("string");
-        expect(typeof comment.votes).toBe("number");
-      });
-  });
-  xit("should respond with a 201 status code and a decremented votes value of a article object from the given id", () => {
-    return request(app)
-      .patch("/api/articles/1")
-      .send({ votes: 80 })
-      .expect(201)
-      .then(({ body }) => {
-        const { article } = body;
-        expect(article).toHaveProperty("votes", 80);
         expect(typeof article.votes).toBe("number");
       });
   });

@@ -1,16 +1,10 @@
-const { users, create } = require("../models/users");
+const { create } = require("../models/articles");
+const { find } = require("../models/users");
 
 exports.getAllUsers = (req, res) => {
-  return users().then((users) => {
+  return find().then((users) => {
     res.status(200).send(users);
   });
-};
-
-exports.uploadImage = (req, res) => {
-  console.log(req.file);
-  return res
-    .status(201)
-    .json({ message: "File uploaded successfully", file: req.file });
 };
 
 exports.createArticle = (req, res) => {
@@ -31,8 +25,9 @@ exports.createArticle = (req, res) => {
     typeof title !== "string" ||
     typeof topic !== "string" ||
     typeof author !== "string"
-  )
-    return res.status(400).send({ msg: "Invalid value" });
+  ) {
+    return res.status(400).send({ msg: "Bad request" });
+  }
 
   return create(title, topic, author).then((article) => {
     return res.status(201).send({ article: article[0] });

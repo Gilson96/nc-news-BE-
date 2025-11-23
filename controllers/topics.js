@@ -1,8 +1,8 @@
 const { checkIfExists } = require("../models/checkIfExists");
-const { topics, create, deleteId } = require("../models/topics");
+const { create, deleteId, find } = require("../models/topics");
 
 exports.getAllTopics = (req, res) => {
-  return topics().then((topics) => {
+  return find().then((topics) => {
     res.status(200).send(topics);
   });
 };
@@ -12,10 +12,6 @@ exports.createTopics = (req, res) => {
 
   if (slug === undefined) {
     return res.status(400).send({ msg: "Invalid field" });
-  }
-
-  if (typeof slug !== "string") {
-    return res.status(400).send({ msg: "Invalid value" });
   }
 
   return checkIfExists("topics", "slug", slug).then((response) => {
