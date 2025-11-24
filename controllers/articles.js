@@ -41,10 +41,6 @@ exports.updateArticle = (req, res) => {
     return res.status(400).send({ msg: "Invalid id" });
   }
 
-  if (typeof title !== "string" || typeof votes !== "number") {
-    return res.status(400).send({ msg: "Bad request" });
-  }
-
   return checkIfExists("articles", "article_id", article_id).then((result) => {
     if (!result) {
       return res.status(404).send({ msg: `Article not found` });

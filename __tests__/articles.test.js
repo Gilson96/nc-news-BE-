@@ -224,7 +224,6 @@ describe("POST /api/articles/:article_id/comments", () => {
 describe("PACTH /api/articles/:article_id", () => {
   it("should respond with a 201 status code and a incremented votes value of a article object from the given id", () => {
     const newArticle = {
-      title: "Front End developer",
       votes: 10,
     };
     return request(app)

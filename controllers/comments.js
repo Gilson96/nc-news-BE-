@@ -26,10 +26,6 @@ exports.updateComment = (req, res) => {
     return res.status(400).send({ msg: "Invalid id" });
   }
 
-  if (typeof body !== "string" || typeof votes !== "number") {
-    return res.status(400).send({ msg: "Bad request" });
-  }
-
   return checkIfExists("comments", "comment_id", comment_id).then((result) => {
     if (!result) {
       return res.status(404).send({ msg: "Comments not found" });

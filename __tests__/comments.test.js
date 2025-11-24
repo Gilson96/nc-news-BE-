@@ -53,15 +53,4 @@ describe("PACTH /api/comments/:comment_id", () => {
         expect(typeof comment.votes).toBe("number");
       });
   });
-  it("should respond with a 201 status code and a decremented votes value of a article object from the given id", () => {
-    return request(app)
-      .patch("/api/articles/1")
-      .send({ votes: 80 })
-      .expect(201)
-      .then(({ body }) => {
-        const { article } = body;
-        expect(article).toHaveProperty("votes", 80);
-        expect(typeof article.votes).toBe("number");
-      });
-  });
 });
