@@ -1,6 +1,0 @@
-You are now connected to database "nc_news_test" as user "gilson".
- slug | description | img_url | article_id |                     title                     | topic |  author  |                          body                          |     created_at      | votes |                                            article_img_url                                            
-------+-------------+---------+------------+-----------------------------------------------+-------+----------+--------------------------------------------------------+---------------------+-------+-------------------------------------------------------------------------------------------------------
- cats | Not dogs    |         |          5 | UNCOVERED: catspiracy to bring down democracy | cats  | rogersop | Bastet walks amongst us, and the cats are taking arms! | 2020-08-03 14:14:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700
-(1 row)
-

@@ -46,7 +46,6 @@ describe("PACTH /api/comments/:comment_id", () => {
       .expect(201)
       .then(({ body }) => {
         const { comment } = body;
-        console.log(comment);
         expect(comment).toHaveProperty("body");
         expect(comment).toHaveProperty("votes");
         expect(typeof comment.body).toBe("string");

@@ -33,7 +33,6 @@ exports.deleteTopics = (req, res) => {
   }
 
   return checkIfExists("topics", "slug", slug).then((response) => {
-    console.log(response);
     if (!response) {
       return res.status(400).send({ msg: "This topic do not exists" });
     } else {
