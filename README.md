@@ -85,6 +85,13 @@ This API serves as the backend for NCNews, where users can interact with article
 
 ---
 
+## Diagrams
+
+![Diagrams](https://github.com/Gilson96/nc-news-BE-/blob/main/assets/nc_news.png?raw=true)
+
+
+---
+
 ## How to set up this project
 
 This project uses two PostgreSQL databases:
